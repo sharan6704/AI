@@ -1,0 +1,133 @@
+class VacuumCleaner:
+    def __init__(self, initial_state):
+        self.state = initial_state  # Initial state in the format [room, status, room, status]
+        self.goal_state = ['A', 0, 'B', 0]  # Desired clean state
+        self.cost = 0  # Initialize cost
+
+    def print_status(self):
+        print(f"Current state: {self.state}")
+
+    def is_dirty(self, room):
+        idx = self.state.index(room) + 1
+        return self.state[idx]
+
+    def clean_room(self, room):
+        idx = self.state.index(room) + 1
+        if self.state[idx] == 1:  # If the room is dirty
+            print(f"Location {room} is Dirty, Cleaning...")
+            self.state[idx] = 0  # Clean the room
+            self.cost += 1  # Increment cost for cleaning
+            print(f"Location {room} has been Cleaned.")
+        else:
+            print(f"Location {room} is already clean.")
+
+    def move_to(self, room):
+        print(f"Moving right to the Location {room}...")
+
+    def check_and_clean(self):
+        for room in ['A', 'B']:
+            self.print_status()
+            if self.is_dirty(room):
+                self.clean_room(room)
+            else:
+                print(f"Location {room} is already clean.")
+            self.move_to(room)
+            print(f"COST for SUCK: {self.cost}")
+
+            self.update_goal_state(room)
+
+    def update_goal_state(self, room):
+        if self.state[self.state.index(room) + 1] == 0:  # If the room is clean
+            print(f"Updating goal state: {room} is clean.")
+            if room == 'A':
+                self.goal_state[1] = 0
+            elif room == 'B':
+                self.goal_state[3] = 0
+        
+        # Print final goal state
+        print(f"Final goal state: {self.goal_state}")
+
+    def run(self):
+        self.check_and_clean()
+        print(f"Total cleaning cost: {self.cost}")
+
+
+def get_user_input():
+    # Get user input for room cleanliness
+    a_status = int(input("Enter status for Room A (0 for clean, 1 for dirty): "))
+    b_status = int(input("Enter status for Room B (0 for clean, 1 for dirty): "))
+
+    if a_status not in [0, 1] or b_status not in [0, 1]:
+        print("Invalid input. Please enter 0 or 1.")
+        return None
+
+    return ['A', a_status, 'B', b_status]
+
+
+# Main execution
+initial_state = get_user_input()
+if initial_state:
+    vacuum = VacuumCleaner(initial_state)
+    vacuum.run()
+
+
+OUTPUT:Case1:BOTH THE ROOM ARE DIRTY
+
+
+	Enter status for Room A (0 for clean, 1 for dirty): 1
+	Enter status for Room B (0 for clean, 1 for dirty): 1
+	Current state: ['A', 1, 'B', 1]
+	Location A is Dirty, Cleaning...
+	Location A has been Cleaned.
+	Moving right to the Location A...
+	COST for SUCK: 1
+	Updating goal state: A is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Current state: ['A', 0, 'B', 1]
+	Location B is Dirty, Cleaning...
+	Location B has been Cleaned.
+	Moving right to the Location B...
+	COST for SUCK: 2
+	Updating goal state: B is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Total cleaning cost: 2
+
+
+Case2: ROOM A IS DIRTY, ROOM B IS CLEAN
+
+	Enter status for Room A (0 for clean, 1 for dirty): 1
+	Enter status for Room B (0 for clean, 1 for dirty): 0
+	Current state: ['A', 1, 'B', 0]
+	Location A is Dirty, Cleaning...
+	Location A has been Cleaned.
+	Moving right to the Location A...
+	COST for SUCK: 1
+	Updating goal state: A is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Current state: ['A', 0, 'B', 0]
+	Location B is already clean.
+	Moving right to the Location B...
+	COST for SUCK: 1
+	Updating goal state: B is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Total cleaning cost: 1
+
+Case3:ROOM A IS CLEAN,ROOM B IS DIRTY
+
+	Enter status for Room A (0 for clean, 1 for dirty): 0
+	Enter status for Room B (0 for clean, 1 for dirty): 1
+	Current state: ['A', 0, 'B', 1]
+	Location A is already clean.
+	Moving right to the Location A...
+	COST for SUCK: 0
+	Updating goal state: A is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Current state: ['A', 0, 'B', 1]
+	Location B is Dirty, Cleaning...
+	Location B has been Cleaned.
+	Moving right to the Location B...
+	COST for SUCK: 1
+	Updating goal state: B is clean.
+	Final goal state: ['A', 0, 'B', 0]
+	Total cleaning cost: 1
+
